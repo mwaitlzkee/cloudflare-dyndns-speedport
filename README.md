@@ -1,6 +1,6 @@
 # cloudflare-dyndns
 
-Middleware for updating [Cloudflare](https://www.cloudflare.com/) DNS records through an [AVM FRITZ!Box](https://en.avm.de/products/fritzbox/).
+Middleware for updating [Cloudflare](https://www.cloudflare.com/) DNS records through a Telekom Speedport Router.
 
 ## Getting started
 
