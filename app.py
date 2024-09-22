@@ -23,17 +23,17 @@ def main():
     cf = CloudFlare.CloudFlare(token=CLOUDFLARE_TOKEN)
 
     if not hostname:
-        return flask.jsonify({'status': 'error', 'message': 'Missing hostname URL parameter.'}), 400
+        return "bad", 400
     if not hostname.endswith(zone):
-        return flask.jsonify({'status': 'error', 'message': 'Hostname is not part of Zone'}), 400
+        return "bad", 400
     if not ipv4:
-        return flask.jsonify({'status': 'error', 'message': 'Missing ipv4 URL parameter.'}), 400
+        return "bad", 400
 
     try:
         zones = cf.zones.get(params={'name': zone})
 
         if not zones:
-            return flask.jsonify({'status': 'error', 'message': 'Zone {} does not exist.'.format(zone)}), 404
+            return "bad", 404
 
         record_zone_concat = hostname
 
@@ -41,7 +41,7 @@ def main():
                                             'name': record_zone_concat, 'match': 'all', 'type': 'A'})
         
         if not a_record:
-            return flask.jsonify({'status': 'error', 'message': f'A record for {record_zone_concat} does not exist.'}), 404
+            return "bad", 404
 
 
         if a_record[0]['content'] != ipv4:
@@ -49,9 +49,9 @@ def main():
                                      'name': a_record[0]['name'], 'type': 'A', 'content': ipv4, 'proxied': a_record[0]['proxied'], 'ttl': a_record[0]['ttl']})
 
     except CloudFlare.exceptions.CloudFlareAPIError as e:
-        return flask.jsonify({'status': 'error', 'message': str(e)}), 500
+        return "bad", 500
 
-    return flask.jsonify({'status': 'success', 'message': 'Update successful.'}), 200
+    return "good", 200
 
 
 @app.route('/healthz', methods=['GET'])
